@@ -1,6 +1,7 @@
-import { createTheme, CssBaseline } from "@mui/material";
+import { createTheme, CssBaseline, List, ListItem } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { getWishes, Wish } from "./services/wishes";
 
 const theme = createTheme({
   typography: {
@@ -10,7 +11,7 @@ const theme = createTheme({
   palette: {
     mode: "dark",
     background: {
-      default: "#131924",
+      default: "#a3b2ce",
     },
     primary: {
       main: "#4d88ff",
@@ -22,9 +23,22 @@ const theme = createTheme({
 });
 
 export const App: FC = () => {
+  const [wishes, setWishes] = useState<Wish[]>([]);
+
+  useEffect(() => {
+    getWishes().then(setWishes);
+  }, []);
+
+  console.log(wishes);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <List>
+        {wishes.map((wish) => {
+          return <ListItem key={wish.name}>{wish.name}</ListItem>;
+        })}
+      </List>
     </ThemeProvider>
   );
 };
